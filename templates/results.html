@@ -1,0 +1,91 @@
+
+
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Inicio de sesión - Maullidos</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/styles.min.css' %}">
+</head>
+
+<body class="bg-gradient">
+<div class="container">
+    <div class="container-fluid">
+        <div class="card shadow">
+            <div class="card-header d-flex py-3">
+                <div class="col-10">
+                    <p class="text-primary m-0 fw-bold">Resultados de la búsqueda</p>
+                </div>
+            </div>
+            <div class="card-body">
+            {% if data %}
+            	<div class="d-flex ">
+                    <h2> Usuario: <b>{{ username }}</b></h2>
+                </div>
+                <div class="d-flex">
+                    <h2> Contraseña: <b>{{ password }}</b></h2>
+                </div>
+                <hr>
+                <div class="d-flex">
+                    <p><strong>Reliability:</strong> {{ data.reliability }}</p>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <h3>Siguiendo:</h3>
+                        <ul>
+                            <h4>Géneros:</h4>
+                            {% for genre in data.following.genres %}
+                                <li>{{ genre }}</li>
+                            {% endfor %}
+                        </ul>
+                        <ul>
+                            <h4>Artistas:</h4>
+                            {% for artist in data.following.artists %}
+                                <li>{{ artist }}</li>
+                            {% endfor %}
+                        </ul>
+                        <ul>
+                            <h4>Etiquetas:</h4>
+                            {% for tag in data.following.tags %}
+                                <li>{{ tag }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <h3>Wishlist</h3>
+                        <ul>
+                            {% for item in data.wishlist %}
+                                <li>
+                                    <strong>Título:</strong> {{ item.title }}<br>
+                                    <strong>Artista:</strong> {{ item.artist }}<br>
+                                    <strong>Etiquetas:</strong>
+                                    <ul>
+                                        {% for tag in item.tags %}
+                                            <li>{{ tag }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %} 
+            {% if error_message %}
+            	<div class="d-flex justify-content-center alert alert-danger">
+                    {{error_message}}
+                </div>
+            {% endif %} 
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
