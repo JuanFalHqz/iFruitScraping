@@ -1,6 +1,6 @@
-# Maullidos
+# iFruitScraping
 
-Aplicación para postear mensajes "Maullidos".
+Aplicación para recoger información.
 ## Instalación y Ejecución
 
 ### Con Docker
@@ -13,12 +13,12 @@ Aplicación para postear mensajes "Maullidos".
    git clone https://github.com/JuanFalHqz/iFruitScraping.git
 3. **Construye la imagen**
    
-   En este caso la imagen se puede llamar maullidos.
+   En este caso la imagen se puede llamar scraping_app.
    ```bash
-   docker build -t iFruitScraping .
+   docker build -t scraping_app .
 4. **Ejecuta el contenedor**
    ```bash
-   docker run -d -p 8000:8000 iFruitScraping 
+   docker run -d -p 8000:8000 scraping_app 
 
 La aplicación estará disponible en http://localhost:8000.
 
