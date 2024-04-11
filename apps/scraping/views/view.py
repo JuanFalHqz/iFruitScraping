@@ -1,3 +1,5 @@
+import traceback
+
 from django.shortcuts import render
 from django.views import View
 from .scraper_views import Scraper
@@ -37,6 +39,11 @@ class ScrapingView(View):
                 scraper.driver_view.quit_driver()
             except Exception as e:
                 error_message = str(e.__str__())
+
+                print('//////////////////////////////////////////////////////////////////////')
+                traceback.print_exc()
+                print('//////////////////////////////////////////////////////////////////////')
+
                 return render(request, 'results.html', {'error_message': error_message})
 
         return render(request, 'results.html', context)

@@ -47,22 +47,21 @@ class Scraper(AbstractScrapingClass):
         """
         try:
             user_input = self.driver.find_element(By.ID, 'username-field')
-            WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of(user_input))
+            WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(user_input))
             user_input.send_keys(user)
-            self.wait_long_time()
+            time.sleep(1)
 
             pass_input = self.driver.find_element(By.ID, 'password-field')
-            WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of(pass_input))
+            WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(pass_input))
             pass_input.send_keys(password)
-            self.wait_long_time()
+            time.sleep(2)
 
             button = self.driver.find_element(By.XPATH, "//button[@type='submit']")
-            WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of(button))
+            WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(button))
             button.click()
-            self.wait_long_time()
+            time.sleep(1)
             pass_input_rectification = self.driver.find_elements(By.ID, 'password-field')
             if pass_input_rectification:
-                time.sleep(10)
                 self.driver_view.quit_driver()
                 raise Exception(
                     'No ha iniciado sesión el usuario con las credenciales proporcionadas. \n Por favor revise que el '
