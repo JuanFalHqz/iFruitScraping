@@ -2,7 +2,7 @@ import random
 import time
 from abc import abstractmethod
 
-from selenium.common import StaleElementReferenceException, NoSuchElementException
+from selenium.common import StaleElementReferenceException, NoSuchElementException, TimeoutException
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
@@ -49,17 +49,51 @@ class Scraper(AbstractScrapingClass):
             user_input = self.driver.find_element(By.ID, 'username-field')
             WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(user_input))
             user_input.send_keys(user)
-            time.sleep(1)
+            time.sleep(5)
 
-            pass_input = self.driver.find_element(By.ID, 'password-field')
-            WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(pass_input))
-            pass_input.send_keys(password)
-            time.sleep(2)
-
-            button = self.driver.find_element(By.XPATH, "//button[@type='submit']")
-            WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(button))
-            button.click()
-            time.sleep(1)
+            pass_inputs = self.driver.find_elements(By.ID, 'password-field')
+            if pass_inputs:
+                print('Encontrado por id')
+                pass_input = pass_inputs[0]  # Tomar el primer elemento de la lista
+                pass_input.send_keys(password)
+                time.sleep(4)
+            else:
+                pass_inputs = self.driver.find_elements(By.XPATH, '//*[@id="password-field"]')
+                if pass_inputs:
+                    print('Encontrado por XPATH')
+                    pass_input = pass_inputs[0]  # Tomar el primer elemento de la lista
+                    pass_input.send_keys(password)
+                    time.sleep(3)
+                else:
+                    pass_inputs = self.driver.find_elements(By.XPATH,
+                                                            '/html/body/div[4]/div/div[2]/div[1]/div/div/form/div[1]/div[2]/div/input')
+                    if pass_inputs:
+                        print('Encontrado por XPATH Completo')
+                        pass_input = pass_inputs[0]  # Tomar el primer elemento de la lista
+                        pass_input.send_keys(password)
+                        time.sleep(3)
+            if not pass_inputs:
+                try:
+                    pass_input = self.driver.find_elements(By.XPATH, '//*[@id="password-field"]')
+                    WebDriverWait(self.driver, 2).until(
+                        expected_conditions.presence_of_element_located(By.XPATH, '//*[@id="password-field"]'))
+                    print('Encontrado por XPATH dada una exepción')
+                    pass_input.send_keys(password)
+                    time.sleep(2)
+                except TimeoutException:
+                    pass_input = self.driver.find_elements(By.XPATH,
+                                                           '/html/body/div[4]/div/div[2]/div[1]/div/div/form/div[1]/div[2]/div/input')
+                    WebDriverWait(self.driver, 2).until(expected_conditions.presence_of_element_located(By.XPATH,
+                                                                                                        '/html/body/div[4]/div/div[2]/div[1]/div/div/form/div[1]/div[2]/div/input'))
+                    print('Encontrado por XPATH Completo dada una exepción')
+                    pass_input.send_keys(password)
+                    time.sleep(2)
+            if pass_inputs:
+                button = self.driver.find_element(By.XPATH, "//button[@type='submit']")
+                WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(button))
+                time.sleep(3)
+                button.click()
+            time.sleep(3)
             pass_input_rectification = self.driver.find_elements(By.ID, 'password-field')
             if pass_input_rectification:
                 self.driver_view.quit_driver()
