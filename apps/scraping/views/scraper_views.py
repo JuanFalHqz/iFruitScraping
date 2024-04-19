@@ -6,6 +6,7 @@ from selenium.common import StaleElementReferenceException, NoSuchElementExcepti
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.relative_locator import locate_with
 from selenium.webdriver.support.wait import WebDriverWait
 
 from apps.scraping.views.driver_view import DriverView
@@ -101,6 +102,34 @@ class Scraper(AbstractScrapingClass):
                     'No ha iniciado sesión el usuario con las credenciales proporcionadas. \n Por favor revise que el '
                     'usuario exista. En caso de que las credenciales del usuario estén correctas puede que haya un '
                     'CAPTCHAT.')
+        except TimeoutException:
+            try:
+                pass_inputs = self.driver.find_elements(By.XPATH, '//*[@id="password-field"]')
+                if pass_inputs:
+                    print('Encontrado por XPATH')
+                    pass_input = pass_inputs[0]  # Tomar el primer elemento de la lista
+                    pass_input.send_keys(password)
+                    time.sleep(3)
+                else:
+                    pass_inputs = self.driver.find_elements(By.XPATH,
+                                                            '/html/body/div[4]/div/div[2]/div[1]/div/div/form/div[1]/div[2]/div/input')
+                    if pass_inputs:
+                        print('Encontrado por XPATH Completo')
+                        pass_input = pass_inputs[0]  # Tomar el primer elemento de la lista
+                        pass_input.send_keys(password)
+                        time.sleep(3)
+            except TimeoutException:
+                password_locator = self.driver.find_elements(
+                    locate_with(By.TAG_NAME, "input").below({By.ID: "username-field"}))
+                if password_locator:
+                    password_locator[0].send_keys(password)
+                    time.sleep(3)
+
+                    button = self.driver.find_element(By.XPATH, "//button[@type='submit']")
+                    WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of(button))
+                    time.sleep(3)
+                    button.click()
+
         except Exception as e:
             raise Exception(e.__str__())
 
