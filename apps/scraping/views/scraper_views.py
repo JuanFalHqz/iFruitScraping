@@ -62,7 +62,6 @@ class Scraper(AbstractScrapingClass):
             self.wait_long_time()
             pass_input_rectification = self.driver.find_elements(By.ID, 'password-field')
             if pass_input_rectification:
-                time.sleep(10)
                 self.driver_view.quit_driver()
                 raise Exception(
                     'No ha iniciado sesión el usuario con las credenciales proporcionadas. \n Por favor revise que el '
