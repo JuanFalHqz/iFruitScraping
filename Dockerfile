@@ -1,6 +1,7 @@
 FROM python:3.12
 
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE 1
 
 # Instala dependencias necesarias para Chrome y Selenium
 RUN apt-get update && apt-get install -y \
@@ -42,4 +43,6 @@ COPY . /app/
 
 EXPOSE 8000
 
-CMD ["python","manage.py","runserver","0.0.0.0:8000"]
+COPY ./entrypoint.sh /
+ENTRYPOINT ["sh", "/entrypoint.sh"]
+# CMD ["python","manage.py","runserver","0.0.0.0:8000"]
